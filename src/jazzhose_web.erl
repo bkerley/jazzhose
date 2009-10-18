@@ -6,7 +6,7 @@
 -module(jazzhose_web).
 -author('Bryce Kerley <bkerley@brycekerley.net>').
 
--export([start/1, stop/0, loop/2]).
+-export([start/1, stop/0, loop/2, get_the_room/0]).
 
 -define(TIMEOUT, 20000).
 
