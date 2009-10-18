@@ -48,8 +48,8 @@ pre i *{color:#090;}
         <div id="content">
             <p class="nojs">JavaScript <strong>must</strong> be enabled to fully enjoy this game.</p>
             <div id="chat">
-                <ol>
-                </ol>
+                <dl>
+                </dl>
             </div>
             <form id="chatter">
                 <label for="message">Message: </label>
@@ -76,10 +76,13 @@ pre i *{color:#090;}
             $(this).triggerHandler("poll");
             
         }).bind("append", function(event, message) {
-            $("ol", this).append([
-                '<li>',
-                message,
-                "</li>"].join(""));
+    var parsed_message = JSON.parse(message);
+            $("dl", this).append([
+                '<dt>',
+    parsed_message['screen_name'],
+                  '</dt><dd>',
+                parsed_message['text'],
+                "</dd>"].join(""));
             this.scrollTop = $("ol", this).get(0).offsetHeight;
 
         }).bind("poll", function(event) {
