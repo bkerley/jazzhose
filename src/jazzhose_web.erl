@@ -30,17 +30,15 @@ room(Users) ->
         {From, unsubscribe} ->
             From ! unsubscribed,
             room(Users -- [From]);
-        {From, status, Message} ->
+        {_From, status, Message} ->
             lists:foreach(fun(User) ->
                                   User ! Message
                           end, Users),
             room([]);
-        {From, post, Message} ->
-            From ! posted,
+        {_From, tweet, Tweet} ->
             lists:foreach(fun(User) ->
-                    % broadcast the message
-                    User ! Message
-                end, Users),
+                                  User ! Tweet
+                          end, Users),
             room([]);
         _Any ->
             room(Users)
@@ -113,32 +111,6 @@ loop(Req, DocRoot) ->
                     });
                 _ ->
                     Req:serve_file(Path, DocRoot)
-            end;
-        'POST' ->
-            case Path of
-                "chat" ->
-                    Data = Req:parse_post(),
-                    Room = get_the_room(),
-                    % post
-                    Room ! {self(), post, list_to_binary(proplists:get_value("message", Data))},
-                    receive
-                        posted ->
-                            % posted
-                            Body = {ok, <<"posted">>}
-                    after 1000 ->
-                        % something went wrong
-                        Body = {error, <<"timeout">>}
-                    end,
-                    
-                    % send back the JSON message
-                    Req:ok({"text/javascript", mochijson2:encode({
-                            struct, [
-                                Body
-                            ]
-                        })
-                    });
-                _ ->
-                    Req:not_found()
             end;
         _ ->
             Req:respond({501, [], []})

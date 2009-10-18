@@ -7,7 +7,8 @@
 % single arg version expects url of the form http://katsudonchef:fatwhitedevil@stream.twitter.com/1/statuses/filter.json
 % this will spawn the 3 arg version so the shell is free
 fetch(URL) ->
-  spawn(twitter_stream, fetch, [URL, 5, 30]).
+    application:start(inets),
+    spawn(twitter_stream, fetch, [URL, 5, 30]).
  
 % 3 arg version expects url of the form http://user:password@stream.twitter.com/1/statuses/sample.json  
 % retry - number of times the stream is reconnected
@@ -58,17 +59,18 @@ fetch(_, Retry, _) when Retry =< 0 ->
 % this is the tweet handler persumably you could do something useful here
 %
 process_data(Data) ->
-    post_status("Received tweet ~p ~n", [Data]),
+    %% post_status("Received tweet ~p ~n", [Data]),
     Room = jazzhose_web:get_the_room(),
-    Room ! {self(), post, list_to_binary(proplists:get_value("message", Data))},
-    
+    Room ! {self(), tweet, Data},
   ok.
  
 post_status(Format, Data) ->
     post_status(io_lib:format(Format, Data)).
 
 post_status(Data) ->
-    jazzhose_web:get_the_room() ! {self(), status, list_to_binary(io_lib:format("Status: ~s", [Data]))}.
+    io:format("Status: ~s~n", [Data]),
+    %% jazzhose_web:get_the_room() ! {self(), status, list_to_binary(io_lib:format("Status: ~s", [Data]))},
+    ok.
 
 %%====================================================================
 %% Internal functions
