@@ -30,6 +30,11 @@ room(Users) ->
         {From, unsubscribe} ->
             From ! unsubscribed,
             room(Users -- [From]);
+        {From, status, Message} ->
+            lists:foreach(fun(User) ->
+                                  User ! Message
+                          end, Users),
+            room([]);
         {From, post, Message} ->
             From ! posted,
             lists:foreach(fun(User) ->
