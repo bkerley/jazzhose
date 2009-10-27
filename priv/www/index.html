@@ -73,11 +73,11 @@ pre i *{color:#090;}
     var parsed_message = JSON.parse(message);
             $("dl", this).append([
                 '<dt>',
-    parsed_message['screen_name'],
+    parsed_message['user']['screen_name'],
                   '</dt><dd>',
                 parsed_message['text'],
                 "</dd>"].join(""));
-            this.scrollTop = $("ol", this).get(0).offsetHeight;
+            this.scrollTop = $("dl", this).get(0).offsetHeight;
 
         }).bind("poll", function(event) {
             var self = this;
