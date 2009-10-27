@@ -18,7 +18,7 @@ fetch(URL, Retry, Sleep) when Retry > 0 ->
   % and have it stream the data back to this process
   post_status("Sending request ~s~n", [URL]),
   try http:request(post, 
-                    {URL, [], "application/x-www-form-urlencoded", "track=#barcampjax"},
+                    {URL, [], "application/x-www-form-urlencoded", "track=#fb"},
                     [], 
                     [{sync, false}, 
                      {stream, self}]) of
