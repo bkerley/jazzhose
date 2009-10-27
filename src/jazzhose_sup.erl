@@ -44,7 +44,7 @@ init([]) ->
     Ip = case os:getenv("MOCHIWEB_IP") of false -> "0.0.0.0"; Any -> Any end,   
     WebConfig = [
          {ip, Ip},
-                 {port, 8000},
+                 {port, 8001},
                  {docroot, jazzhose_deps:local_path(["priv", "www"])}],
     Web = {jazzhose_web,
            {jazzhose_web, start, [WebConfig]},
